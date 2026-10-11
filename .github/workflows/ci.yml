@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build & Test via Make
+        run: |
+          make test
+      - name: Build & Test via CMake
+        run: |
+          cmake -B build -S .
+          cmake --build build
+          ctest --test-dir build --output-on-failure
